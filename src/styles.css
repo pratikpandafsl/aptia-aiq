@@ -62,6 +62,11 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-chat: var(--chat);
+  --color-chat-foreground: var(--chat-foreground);
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -74,8 +79,13 @@
 
 :root {
   --radius: 0.625rem;
+  --brand: oklch(0.72 0.13 185);
+  --brand-strong: oklch(0.52 0.1 190);
+  --chat: oklch(0.27 0.06 235);
+  --chat-foreground: oklch(0.98 0 0);
+  --gradient-chat: linear-gradient(160deg, oklch(0.3 0.06 235), oklch(0.22 0.05 245));
   --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --foreground: oklch(0.25 0.04 250);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
@@ -84,7 +94,7 @@
   --primary-foreground: oklch(0.984 0.003 247.858);
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
+  --muted: oklch(0.97 0.004 250);
   --muted-foreground: oklch(0.554 0.046 257.417);
   --accent: oklch(0.968 0.007 247.896);
   --accent-foreground: oklch(0.208 0.042 265.755);
