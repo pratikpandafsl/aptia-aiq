@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { formatChatExport } from "../lib/chat-export";
 import type { Conversation } from "../components/chat-types";
+import { conversations } from "../data.js";
 
 const chat: Conversation = {
   id: "sample", title: "JLR spouse pension rule", confidence: null, reasoning: ["Internal reasoning"], validation: [],
@@ -16,5 +17,20 @@ describe("Chat text export", () => {
   });
   it("rejects a missing or invalid server timestamp", () => {
     expect(() => formatChatExport(chat, "")).toThrow("Invalid server timestamp");
+  });
+  it("exports all five Weir normal pension age exchanges in order", () => {
+    const conversation = conversations.find((record) => record.id === "weir-npa");
+    if (!conversation) throw new Error("Missing Weir conversation");
+    expect(conversation.messages).toHaveLength(10);
+    const output = formatChatExport(conversation, "2026-11-18T11:45:00Z");
+    expect(output.match(/ADMINISTRATOR:/g)).toHaveLength(5);
+    expect(output.match(/AIQ \(for human review\):/g)).toHaveLength(5);
+    let position = -1;
+    for (const message of conversation.messages) {
+      const next = output.indexOf(message.text, position + 1);
+      expect(next).toBeGreaterThan(position);
+      position = next;
+    }
+    expect(output.indexOf("Sources:")).toBeGreaterThan(position);
   });
 });

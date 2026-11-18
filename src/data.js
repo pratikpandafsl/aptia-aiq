@@ -33,9 +33,28 @@ export const conversations = [
       pending: ["Statutory GMP increase from GMP payable date"]
     }
   },
+  {
+    id: "weir-npa",
+    title: "Weir normal pension age",
+    messages: [
+      { id: "weir-npa-question", role: "user", userRole: "Administrator", text: "Where can I check the normal pension age for a Weir member?" },
+      { id: "weir-npa-answer", role: "assistant", text: "Check the member’s recorded normal retirement date and the applicable section of the scheme rules. Do not infer an individual member’s retirement date from their age alone. [weir-npa.1]" },
+      { id: "weir-npa-question-2", role: "user", userRole: "Administrator", text: "Which member details should I gather before checking the rules?" },
+      { id: "weir-npa-answer-2", role: "assistant", text: "For this illustrative case, gather:\n• Member reference and date of birth.\n• Scheme section and membership category.\n• Joining and leaving dates.\n• Recorded normal retirement date.\n• Any service periods with different benefit terms.\n\nCompare these details with the current member record before confirming an individual retirement date. [weir-npa.1]" },
+      { id: "weir-npa-question-3", role: "user", userRole: "Administrator", text: "What if the member record and a previous benefit statement show different dates?" },
+      { id: "weir-npa-answer-3", role: "assistant", text: "Do not choose a date without resolving the discrepancy.\n\nSteps:\n1. Record both dates and where each came from.\n2. Check when the statement was issued and whether the member’s details changed.\n3. Review the applicable scheme section and any relevant amendments.\n4. Ask the administration reviewer to confirm the correct date and document the reason.\n\nThis sample conversation does not establish which date is correct. [weir-npa.1]" },
+      { id: "weir-npa-question-4", role: "user", userRole: "Administrator", text: "Can I use the same normal pension age for all of the member’s service?" },
+      { id: "weir-npa-answer-4", role: "assistant", text: "Do not assume that every service period has the same benefit terms. Check whether different scheme sections or service periods need separate treatment, including any relevant equalisation provisions.\n\nList each service period, the rule that applies and the supporting record. A reviewer must confirm the result against live scheme documents; no scheme-wide pension age is asserted in this illustrative answer. [weir-npa.1]" },
+      { id: "weir-npa-question-5", role: "user", userRole: "Administrator", text: "Please summarise what I should send for human review." },
+      { id: "weir-npa-answer-5", role: "assistant", text: "Human-review checklist:\n• Member reference, date of birth and scheme section.\n• Recorded normal retirement date and the date of the record.\n• Relevant service periods and supporting scheme-rule references.\n• Any conflicting dates from previous statements.\n• Outstanding questions and documents still required.\n\nBottom line: confirm the member-specific normal retirement date using the current record and applicable rules before issuing advice or a calculation. These are fictional prototype messages for testing a multi-turn chat download, not pension advice. [weir-npa.1]" }
+    ],
+    sources: [{ id: "weir-npa.1", kind: "document", title: "Weir_Member_Administration_Guide.pdf", status: "Sample", fields: [{ label: "Version", value: "Illustrative copy" }, { label: "Owner", value: "Sample scheme administration team" }, { label: "Reference", value: "Prototype checklist" }], excerpt: "Check the recorded normal retirement date, applicable scheme section and supporting member details. Resolve conflicting records through human review." }],
+    reasoning: ["Identified the scheme topic in the question.", "Reviewed the illustrative checklist linked to this conversation.", "Highlighted the records and human review needed before giving member-specific advice."],
+    validation: [{ label: "Sample data", detail: "This is an illustrative conversation, not a live scheme record." }, { label: "Human review", detail: "Confirm the applicable rules and current member details." }],
+    confidence: null
+  },
   ...[
     ["bereavement", "Bereavement documents", "Which documents are needed for a bereavement query?", "The sample checklist includes the death certificate, the member reference and contact details for the person reporting the death. Confirm the current scheme checklist before requesting documents.", "Bereavement_Checklist.pdf"],
-    ["weir-npa", "Weir normal pension age", "Where can I check the normal pension age for a Weir member?", "Check the member’s recorded normal retirement date and the applicable section of the scheme rules. Do not infer an individual member’s retirement date from their age alone.", "Weir_Member_Administration_Guide.pdf"],
     ["jlr-spouse", "JLR spouse pension rule", "Where is the JLR spouse pension rule recorded?", "The sample record points to the dependant benefits section. Eligibility and the benefit basis need to be checked against the member’s section and the current scheme rules.", "JLR_Dependant_Benefits.pdf"],
     ["weir-late", "Late retirement factor — Weir Group", "How is a Weir late retirement factor calculated?", "For this illustrative scheme rule, the non-GMP factor is 1.08 raised to the number of years late, with complete months counted proportionately. Check the retirement dates and handle GMP separately.", "Weir_Group_Trust_Deed_and_Rules.pdf"],
     ["weir-barber", "Barber period — Weir Group", "What should I check for the Barber period in Weir Group?", "Review the member’s service dates and the equalisation provisions in the applicable scheme section. The sample does not establish an individual entitlement; this needs human review.", "Weir_Equalisation_Guidance.pdf"],
