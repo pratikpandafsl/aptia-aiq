@@ -4,7 +4,8 @@ import { conversations as sampleConversations } from "../data.js";
 import type { Conversation } from "./chat-types";
 import { ChatButton as Button } from "./chat-button";
 import { ReasoningView, ValidationView } from "./answer-detail-views";
-import { downloadChatText, formatChatExport, getExportServerTime } from "../lib/chat-export";
+import { downloadChatText, formatChatExport, getChatExportFilename, getExportServerTime } from "../lib/chat-export";
+import { BOT_NAME, getBotInitials } from "../lib/chat-config";
 
 const tabs = ["Sources", "How it answered", "Validation"] as const;
 const points = ["Documents and data records cited, with file name, version, pages and effective date", "Owner, last update and freshness so you can trust what you read", "Exact excerpt or record reference, plus anything else worth knowing", "Review whether the sources support the answer: Supports, Does not support or Unclear"];
@@ -50,7 +51,7 @@ export default function PensionAssistant() {
   const download = async () => {
     if (!active || exportBusy) return;
     if (exportState?.id === active.id) {
-      downloadChatText(exportState.text, `${active.id}.txt`);
+      downloadChatText(exportState.text, getChatExportFilename(active.title));
       setExportState(null);
       return;
     }
@@ -60,7 +61,7 @@ export default function PensionAssistant() {
       const text = formatChatExport(active, await getExportServerTime());
       // Keep a synchronous second click for touch devices or slow requests.
       if (matchMedia("(pointer: coarse)").matches || performance.now() - started > 900) setExportState({ id: active.id, text });
-      else downloadChatText(text, `${active.id}.txt`);
+      else downloadChatText(text, getChatExportFilename(active.title));
     } catch {
       setExportError("Could not get the server time. Please try downloading again.");
     } finally { setExportBusy(false); }
@@ -68,8 +69,8 @@ export default function PensionAssistant() {
 
   return <div className="assistant-app">
     <header className="assistant-header">
-      <div className="brand-lockup"><div className="brand-avatar">AIQ</div><div><strong>Aptia's IQ</strong><small>APTIA COLLEAGUE ASSIST</small></div></div>
-      <nav>{["Prompting guide", "What can I ask AIQ?", "FAQs", "Contact us"].map((label) => <a key={label} href="#">{label}</a>)}</nav>
+      <div className="brand-lockup"><div className="brand-avatar">{getBotInitials()}</div><div><strong>{BOT_NAME}</strong><small>APTIA COLLEAGUE ASSIST</small></div></div>
+      <nav>{["Prompting guide", `What can I ask ${getBotInitials()}?`, "FAQs", "Contact us"].map((label) => <a key={label} href="#">{label}</a>)}</nav>
       <Button className="details-toggle" aria-label="Toggle answer details" title="Answer details" onClick={() => setDetailsOpen(!detailsOpen)}><PanelRight size={18}/></Button>
     </header>
     <div className="assistant-body">
@@ -88,7 +89,7 @@ export default function PensionAssistant() {
         {!records.some((record) => record.title.toLowerCase().includes(search.toLowerCase())) && <p className="search-empty">No conversations found.</p>}</div>
       </aside>}
       <main className="chat-main">
-        {!active ? <div className="chat-welcome"><div className="welcome-avatar">AIQ</div><h1>Pension Colleague Assistant</h1><p>Please provide the scheme name and, for member-specific queries,<br className="desktop-break"/> the member's National Insurance number.</p></div> : <>
+        {!active ? <div className="chat-welcome"><div className="welcome-avatar">{getBotInitials()}</div><h1>Pension Colleague Assistant</h1><p>Please provide the scheme name and, for member-specific queries,<br className="desktop-break"/> the member's National Insurance number.</p></div> : <>
           <div className="transcript-toolbar">{exportError && <span role="alert">{exportError}</span>}<Button onClick={download} disabled={exportBusy}><Download size={13}/>{exportBusy ? "Preparing…" : exportState?.id === active.id ? "Save chat file" : "Download chat"}</Button></div>
           <div className="chat-transcript" ref={transcript} aria-label="Conversation messages">
             {active.messages.map((message) => message.role === "user" ? <div key={message.id} className="user-message">{message.text}</div> : <article className="assistant-message" key={message.id}>

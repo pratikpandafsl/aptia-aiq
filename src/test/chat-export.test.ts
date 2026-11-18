@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatChatExport } from "../lib/chat-export";
+import { formatChatExport, getChatExportFilename } from "../lib/chat-export";
 import type { Conversation } from "../components/chat-types";
 import { conversations } from "../data.js";
 
@@ -9,6 +9,16 @@ const chat: Conversation = {
   sources: [{ id: "jlr.1", title: "JLR_Pension_Scheme_Rules.pdf", kind: "document", status: "Current", fields: [{ label: "Version", value: "2022 consolidation" }, { label: "Reference", value: "Rule 14 Pension sharing on divorce" }], excerpt: "Not included in export" }],
 };
 describe("Chat text export", () => {
+  it("names downloads using the bot name and full history title", () => {
+    expect(getChatExportFilename("Weir normal pension age")).toBe("aptia-iq-weir-normal-pension-age.txt");
+  });
+  it("uses a changed bot name for filenames and transcript branding", () => {
+    expect(getChatExportFilename("Weir normal pension age", "Member Assist")).toBe("member-assist-weir-normal-pension-age.txt");
+    const output = formatChatExport(chat, "2026-11-18T11:41:47Z", "Member Assist");
+    expect(output.startsWith("Member Assist – JLR spouse pension rule\n")).toBe(true);
+    expect(output).toContain("MA (for human review):");
+    expect(output).not.toContain("Aptia's IQ");
+  });
   it("uses the supplied server timestamp in the reference time zone", () => {
     expect(formatChatExport(chat, "2026-11-18T11:41:47Z").split("\n").slice(0, 2)).toEqual(["Aptia's IQ – JLR spouse pension rule", "Exported 18/11/2026, 17:11:47"]);
   });

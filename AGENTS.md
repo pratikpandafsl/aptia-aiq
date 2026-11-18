@@ -30,6 +30,7 @@ use the editor.
 <!-- LOVABLE:END -->
 
 ## Chat prototype
+- Keep bot branding in the shared chat configuration and derive export filenames from that name and the conversation title so renaming the bot stays consistent.
 - Keep the history UI in a router-independent React component with typed data.js records so the hosted preview and standalone download share behavior.
 - Keep prototype chat changes and feedback in memory; API persistence and inference are not connected at this stage.
 - Store optional timeline and validation presentation records alongside each conversation so right-hand views remain data-driven; second-opinion validation stays disabled until an API is connected.
