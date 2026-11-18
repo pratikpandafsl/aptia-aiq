@@ -104,7 +104,7 @@ export default function PensionAssistant() {
               <p>How correct and relevant was this answer? (1 = incorrect, 5 = fully correct)</p>
               <div className="rating-options">{[1,2,3,4,5].map((rating) => <Button key={rating} aria-label={`Rate answer ${rating}`} aria-pressed={review?.rating === rating} className={review?.rating === rating ? "selected" : ""} onClick={() => updateReview({ rating, submitted: false })}>{rating}</Button>)}</div>
               <textarea aria-label="Answer feedback" placeholder="Tell us what was right or wrong (optional)..." value={review?.note ?? ""} onChange={(event) => updateReview({ note: event.target.value, submitted: false })}/>
-              <Button type="submit" className="feedback-submit" disabled={!review?.rating}>{review?.submitted ? "Feedback saved" : "Submit feedback"}</Button>
+              {review?.submitted ? <p role="status">Thanks — you rated this {review.rating}/5.</p> : <Button type="submit" className="feedback-submit" disabled={!review?.rating}>Submit feedback</Button>}
             </form>}
           </div>
         </>}
