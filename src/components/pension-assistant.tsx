@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { History, Plus, SlidersHorizontal, ChevronDown, ArrowUp, BookOpenCheck, X, Search, MessageSquare, Database, FileText, Download, ThumbsUp, ThumbsDown, CircleHelp, ShieldCheck, PanelRight } from "lucide-react";
+import { History, Plus, ArrowUp, BookOpenCheck, X, Search, MessageSquare, Database, FileText, Download, ThumbsUp, ThumbsDown, CircleHelp, ShieldCheck, PanelRight } from "lucide-react";
 import { conversations as sampleConversations, dummyResponse } from "../data.js";
 import type { Conversation } from "./chat-types";
 import { ChatButton as Button } from "./chat-button";
@@ -8,6 +8,7 @@ import { downloadChatText, formatChatExport, getChatExportFilename, getExportSer
 import { BOT_NAME, getBotInitials } from "../lib/chat-config";
 import { generateHistoryTitle, summarizeFirstMessage } from "../lib/chat-title";
 import { ChatAttachments } from "./chat-attachments";
+import { ChatMode } from "./chat-mode";
 
 const tabs = ["Sources", "How it answered", "Validation"] as const;
 const points = ["Documents and data records cited, with file name, version, pages and effective date", "Owner, last update and freshness so you can trust what you read", "Exact excerpt or record reference, plus anything else worth knowing", "Review whether the sources support the answer: Supports, Does not support or Unclear"];
@@ -118,7 +119,7 @@ export default function PensionAssistant() {
           </div>
         </>}
         <div className="composer-area"><form className="chat-composer" onSubmit={(event) => { event.preventDefault(); send(); }}><textarea ref={textarea} aria-label="Ask a question" placeholder="Ask a question..." value={q} onChange={(event) => setQ(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) { event.preventDefault(); send(); } }}/><Button type="submit" className="send-button" aria-label="Send" title="Send" disabled={!q.trim()}><ArrowUp size={17}/></Button></form>
-        <div className="composer-tools"><ChatAttachments files={files} onFilesChange={setFiles}/><SlidersHorizontal size={14}/><span>Standard</span><ChevronDown size={13}/></div></div>
+        <div className="composer-tools"><ChatAttachments files={files} onFilesChange={setFiles}/><ChatMode/></div></div>
       </main>
       <section className={`answer-panel ${detailsOpen ? "details-open" : ""}`} aria-label="Answer details">
         <div className="answer-tabs"><div className="answer-tab-group" role="tablist">{tabs.map((name) => <Button key={name} role="tab" aria-selected={tab === name} aria-controls="answer-details-content" className={tab === name ? "selected" : ""} onClick={() => setTab(name)}>{name}{name === "Sources" && active?.sources.length ? ` (${active.sources.length})` : ""}</Button>)}</div></div>

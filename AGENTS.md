@@ -30,6 +30,7 @@ use the editor.
 <!-- LOVABLE:END -->
 
 ## Chat prototype
+- Keep the response-mode label and its two icons in one portable menu trigger; mode selection is presentation-only until inference is connected.
 - Use a native modal dialog for the portable connectors empty state so focus trapping and Escape dismissal work without router or UI-library dependencies.
 - Keep selected chat attachments as browser File objects in prototype state; the attachment menu does not upload or read documents until an API is connected.
 - Generate new-chat history titles once from the first user message through the async router-independent title function; retain a local summary on failure so future AI integration cannot interrupt messaging.

@@ -39,6 +39,12 @@
 .composer-tools span { color: var(--chat-foreground); }
 .composer-tools { position: relative; flex-wrap: wrap; }
 .attachment-control { position: relative; }
+.chat-mode { position: relative; }
+.chat-mode-trigger { min-height: 24px; gap: 10px; font-size: 11px; }
+.chat-mode-menu { position: absolute; bottom: calc(100% + 8px); left: 0; width: 110px; padding: 5px; border: 1px solid var(--border); border-radius: 8px; background: var(--background); color: var(--foreground); box-shadow: var(--shadow-control); z-index: 5; }
+.chat-mode-menu .chat-button { width: 100%; min-height: 26px; justify-content: space-between; padding: 5px 6px; font-size: 11px; border-radius: 4px; }
+.chat-mode-menu .chat-button span { color: inherit; }
+.chat-mode-menu .chat-button:hover, .chat-mode-menu .chat-button:focus-visible { background: var(--muted); }
 .attachment-trigger { width: 24px; height: 24px; }
 .attachment-menu { position: absolute; bottom: calc(100% + 8px); left: 0; width: 146px; padding: 5px; border: 1px solid var(--border); border-radius: 8px; background: var(--background); color: var(--foreground); box-shadow: var(--shadow-control); z-index: 5; }
 .attachment-menu .chat-button { width: 100%; justify-content: flex-start; padding: 8px; font-size: 11px; }
