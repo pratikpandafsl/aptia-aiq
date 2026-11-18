@@ -7,6 +7,7 @@ import { ReasoningView, ValidationView } from "./answer-detail-views";
 import { downloadChatText, formatChatExport, getChatExportFilename, getExportServerTime } from "../lib/chat-export";
 import { BOT_NAME, getBotInitials } from "../lib/chat-config";
 import { generateHistoryTitle, summarizeFirstMessage } from "../lib/chat-title";
+import { ChatAttachments } from "./chat-attachments";
 
 const tabs = ["Sources", "How it answered", "Validation"] as const;
 const points = ["Documents and data records cited, with file name, version, pages and effective date", "Owner, last update and freshness so you can trust what you read", "Exact excerpt or record reference, plus anything else worth knowing", "Review whether the sources support the answer: Supports, Does not support or Unclear"];
@@ -18,6 +19,7 @@ export default function PensionAssistant() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [q, setQ] = useState("");
+  const [files, setFiles] = useState<File[]>([]);
   const [tab, setTab] = useState<(typeof tabs)[number]>("Sources");
   const [exportState, setExportState] = useState<{ id: string; text: string } | null>(null);
   const [exportBusy, setExportBusy] = useState(false);
@@ -31,8 +33,8 @@ export default function PensionAssistant() {
   useEffect(() => { textarea.current?.focus(); }, [activeId]);
   useEffect(() => { setExportState(null); setExportError(""); }, [activeId, active?.messages.length]);
   useEffect(() => { if (transcript.current) transcript.current.scrollTop = transcript.current.scrollHeight; }, [activeId, active?.messages.length]);
-  const reset = () => { setActiveId(null); setQ(""); setTab("Sources"); setDetailsOpen(false); textarea.current?.focus(); };
-  const select = (id: string) => { setActiveId(id); setQ(""); setTab("Sources"); setDetailsOpen(false); if (window.innerWidth < 768) setHistoryOpen(false); };
+  const reset = () => { setActiveId(null); setQ(""); setFiles([]); setTab("Sources"); setDetailsOpen(false); textarea.current?.focus(); };
+  const select = (id: string) => { setActiveId(id); setQ(""); setFiles([]); setTab("Sources"); setDetailsOpen(false); if (window.innerWidth < 768) setHistoryOpen(false); };
   const updateReview = (change: Partial<NonNullable<typeof review>>) => {
     if (!activeId) return;
     setFeedback((previous) => ({ ...previous, [activeId]: { ...(previous[activeId] ?? { rating: 0, note: "", submitted: false, support: "" }), ...change } }));
@@ -116,7 +118,7 @@ export default function PensionAssistant() {
           </div>
         </>}
         <div className="composer-area"><form className="chat-composer" onSubmit={(event) => { event.preventDefault(); send(); }}><textarea ref={textarea} aria-label="Ask a question" placeholder="Ask a question..." value={q} onChange={(event) => setQ(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) { event.preventDefault(); send(); } }}/><Button type="submit" className="send-button" aria-label="Send" title="Send" disabled={!q.trim()}><ArrowUp size={17}/></Button></form>
-        <div className="composer-tools"><Plus size={15}/><SlidersHorizontal size={14}/><span>Standard</span><ChevronDown size={13}/></div></div>
+        <div className="composer-tools"><ChatAttachments files={files} onFilesChange={setFiles}/><SlidersHorizontal size={14}/><span>Standard</span><ChevronDown size={13}/></div></div>
       </main>
       <section className={`answer-panel ${detailsOpen ? "details-open" : ""}`} aria-label="Answer details">
         <div className="answer-tabs"><div className="answer-tab-group" role="tablist">{tabs.map((name) => <Button key={name} role="tab" aria-selected={tab === name} aria-controls="answer-details-content" className={tab === name ? "selected" : ""} onClick={() => setTab(name)}>{name}{name === "Sources" && active?.sources.length ? ` (${active.sources.length})` : ""}</Button>)}</div></div>

@@ -37,6 +37,17 @@
 .send-button { width: 32px; height: 32px; background: var(--brand-strong); color: var(--chat-foreground); border-radius: 10px; }
 .composer-tools { display: flex; gap: 19px; align-items: center; margin: 15px 8px 0; font-size: 11px; color: var(--chat-muted); }
 .composer-tools span { color: var(--chat-foreground); }
+.composer-tools { position: relative; flex-wrap: wrap; }
+.attachment-control { position: relative; }
+.attachment-trigger { width: 24px; height: 24px; }
+.attachment-menu { position: absolute; bottom: calc(100% + 8px); left: 0; width: 146px; padding: 5px; border: 1px solid var(--border); border-radius: 8px; background: var(--background); color: var(--foreground); box-shadow: var(--shadow-control); z-index: 5; }
+.attachment-menu .chat-button { width: 100%; justify-content: flex-start; padding: 8px; font-size: 11px; }
+.attachment-menu .chat-button:hover:not(:disabled) { background: var(--muted); }
+.attachment-list { display: flex; flex-wrap: wrap; gap: 6px; width: 100%; margin: -7px 0 0; }
+.attachment-chip { display: flex; align-items: center; gap: 6px; max-width: 100%; min-width: 0; padding: 3px 6px; border-radius: 8px; background: var(--chat-surface); color: var(--chat-foreground); font-size: 10px; }
+.attachment-chip > svg { color: var(--brand); flex-shrink: 0; }
+.attachment-chip span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.attachment-chip .chat-button { width: 18px; height: 18px; }
 .transcript-toolbar { display: flex; justify-content: flex-end; padding: 10px 24px 5px; color: var(--chat-muted); flex-shrink: 0; font-size: 10px; }
 .chat-transcript { min-height: 0; flex: 1; overflow-y: auto; padding: 0 22px 12px; scrollbar-color: var(--chat-muted) var(--chat); }
 .user-message { margin: 0 0 15px auto; max-width: 88%; padding: 10px 13px; border-radius: 10px; background: var(--user-message); color: var(--user-message-foreground); font-size: 11px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
