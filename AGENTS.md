@@ -33,3 +33,4 @@ use the editor.
 - Keep the history UI in a router-independent React component with typed data.js records so the hosted preview and standalone download share behavior.
 - Keep prototype chat changes and feedback in memory; API persistence and inference are not connected at this stage.
 - Store optional timeline and validation presentation records alongside each conversation so right-hand views remain data-driven; second-opinion validation stays disabled until an API is connected.
+- Chat exports use the hosting server's uncached HTTP Date header, formatted in Asia/Kolkata to match the reference; fail visibly rather than substituting a browser timestamp, and keep formatting router-independent.

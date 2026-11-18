@@ -4,6 +4,7 @@ import { conversations as sampleConversations } from "../data.js";
 import type { Conversation } from "./chat-types";
 import { ChatButton as Button } from "./chat-button";
 import { ReasoningView, ValidationView } from "./answer-detail-views";
+import { downloadChatText, formatChatExport, getExportServerTime } from "../lib/chat-export";
 
 const tabs = ["Sources", "How it answered", "Validation"] as const;
 const points = ["Documents and data records cited, with file name, version, pages and effective date", "Owner, last update and freshness so you can trust what you read", "Exact excerpt or record reference, plus anything else worth knowing", "Review whether the sources support the answer: Supports, Does not support or Unclear"];
@@ -16,6 +17,9 @@ export default function PensionAssistant() {
   const [search, setSearch] = useState("");
   const [q, setQ] = useState("");
   const [tab, setTab] = useState<(typeof tabs)[number]>("Sources");
+  const [exportState, setExportState] = useState<{ id: string; text: string } | null>(null);
+  const [exportBusy, setExportBusy] = useState(false);
+  const [exportError, setExportError] = useState("");
   const [feedback, setFeedback] = useState<Record<string, { rating: number; note: string; submitted: boolean; support: string }>>({});
   const textarea = useRef<HTMLTextAreaElement>(null);
   const transcript = useRef<HTMLDivElement>(null);
@@ -23,6 +27,7 @@ export default function PensionAssistant() {
   const review = activeId ? feedback[activeId] : undefined;
 
   useEffect(() => { textarea.current?.focus(); }, [activeId]);
+  useEffect(() => { setExportState(null); setExportError(""); }, [activeId, active?.messages.length]);
   useEffect(() => { if (transcript.current) transcript.current.scrollTop = transcript.current.scrollHeight; }, [activeId, active?.messages.length]);
   const reset = () => { setActiveId(null); setQ(""); setTab("Sources"); setDetailsOpen(false); textarea.current?.focus(); };
   const select = (id: string) => { setActiveId(id); setQ(""); setTab("Sources"); setDetailsOpen(false); if (window.innerWidth < 768) setHistoryOpen(false); };
@@ -42,11 +47,23 @@ export default function PensionAssistant() {
     }
     setQ(""); textarea.current?.focus();
   };
-  const download = () => {
-    if (!active) return;
-    const content = [active.title, ...active.messages.map((message) => `${message.role.toUpperCase()}\n${message.text}`), "SOURCES", ...active.sources.map((source) => `${source.title}\n${source.fields.map((field) => `${field.label}: ${field.value}`).join("\n")}\n${source.excerpt}`), "HOW IT ANSWERED", ...active.reasoning, "VALIDATION", ...active.validation.map((item) => `${item.label}: ${item.detail}`)].join("\n\n");
-    const url = URL.createObjectURL(new Blob([content], { type: "text/plain" }));
-    const link = document.createElement("a"); link.href = url; link.download = `${active.id}.txt`; link.click(); URL.revokeObjectURL(url);
+  const download = async () => {
+    if (!active || exportBusy) return;
+    if (exportState?.id === active.id) {
+      downloadChatText(exportState.text, `${active.id}.txt`);
+      setExportState(null);
+      return;
+    }
+    setExportBusy(true); setExportError("");
+    const started = performance.now();
+    try {
+      const text = formatChatExport(active, await getExportServerTime());
+      // Keep a synchronous second click for touch devices or slow requests.
+      if (matchMedia("(pointer: coarse)").matches || performance.now() - started > 900) setExportState({ id: active.id, text });
+      else downloadChatText(text, `${active.id}.txt`);
+    } catch {
+      setExportError("Could not get the server time. Please try downloading again.");
+    } finally { setExportBusy(false); }
   };
 
   return <div className="assistant-app">
@@ -72,7 +89,7 @@ export default function PensionAssistant() {
       </aside>}
       <main className="chat-main">
         {!active ? <div className="chat-welcome"><div className="welcome-avatar">AIQ</div><h1>Pension Colleague Assistant</h1><p>Please provide the scheme name and, for member-specific queries,<br className="desktop-break"/> the member's National Insurance number.</p></div> : <>
-          <div className="transcript-toolbar"><Button onClick={download}><Download size={13}/>Download chat</Button></div>
+          <div className="transcript-toolbar">{exportError && <span role="alert">{exportError}</span>}<Button onClick={download} disabled={exportBusy}><Download size={13}/>{exportBusy ? "Preparing…" : exportState?.id === active.id ? "Save chat file" : "Download chat"}</Button></div>
           <div className="chat-transcript" ref={transcript} aria-label="Conversation messages">
             {active.messages.map((message) => message.role === "user" ? <div key={message.id} className="user-message">{message.text}</div> : <article className="assistant-message" key={message.id}>
               <div className="answer-label"><ShieldCheck size={12}/><span>Recommendation — for human review</span>{active.confidence !== null && <span className="confidence">{active.confidence}% confidence</span>}</div>
