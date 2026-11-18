@@ -30,6 +30,7 @@ export default function PensionAssistant() {
   const transcript = useRef<HTMLDivElement>(null);
   const active = records.find((record) => record.id === activeId);
   const review = activeId ? feedback[activeId] : undefined;
+  const lastAssistantId = active ? [...active.messages].reverse().find((message) => message.role === "assistant")?.id : undefined;
 
   useEffect(() => { textarea.current?.focus(); }, [activeId]);
   useEffect(() => { setExportState(null); setExportError(""); }, [activeId, active?.messages.length]);
@@ -109,13 +110,13 @@ export default function PensionAssistant() {
             {active.messages.map((message) => message.role === "user" ? <div key={message.id} className="user-message">{message.text}</div> : <article className="assistant-message" key={message.id}>
               <div className="answer-label"><ShieldCheck size={12}/><span>Recommendation — for human review</span>{active.confidence !== null && <span className="confidence">{active.confidence}% confidence</span>}</div>
               <div className="answer-text">{message.text}</div>
+              {message.id === lastAssistantId && (review?.submitted ? <div className="answer-feedback submitted"><p role="status">Thanks — you rated this {review.rating}/5.</p></div> : <form className="answer-feedback" onSubmit={(event) => { event.preventDefault(); updateReview({ submitted: true }); }}>
+                <p>How correct and relevant was this answer? (1 = incorrect, 5 = fully correct)</p>
+                <div className="rating-options">{[1,2,3,4,5].map((rating) => <Button key={rating} aria-label={`Rate answer ${rating}`} aria-pressed={review?.rating === rating} className={review?.rating === rating ? "selected" : ""} onClick={() => updateReview({ rating, submitted: false })}>{rating}</Button>)}</div>
+                <textarea aria-label="Answer feedback" placeholder="Tell us what was right or wrong (optional)..." value={review?.note ?? ""} onChange={(event) => updateReview({ note: event.target.value, submitted: false })}/>
+                <Button type="submit" className="feedback-submit" disabled={!review?.rating}>Submit feedback</Button>
+              </form>)}
             </article>)}
-            {active.messages.some((message) => message.role === "assistant") && <form className="answer-feedback" onSubmit={(event) => { event.preventDefault(); updateReview({ submitted: true }); }}>
-              <p>How correct and relevant was this answer? (1 = incorrect, 5 = fully correct)</p>
-              <div className="rating-options">{[1,2,3,4,5].map((rating) => <Button key={rating} aria-label={`Rate answer ${rating}`} aria-pressed={review?.rating === rating} className={review?.rating === rating ? "selected" : ""} onClick={() => updateReview({ rating, submitted: false })}>{rating}</Button>)}</div>
-              <textarea aria-label="Answer feedback" placeholder="Tell us what was right or wrong (optional)..." value={review?.note ?? ""} onChange={(event) => updateReview({ note: event.target.value, submitted: false })}/>
-              {review?.submitted ? <p role="status">Thanks — you rated this {review.rating}/5.</p> : <Button type="submit" className="feedback-submit" disabled={!review?.rating}>Submit feedback</Button>}
-            </form>}
           </div>
         </>}
         <div className="composer-area"><form className="chat-composer" onSubmit={(event) => { event.preventDefault(); send(); }}><textarea ref={textarea} aria-label="Ask a question" placeholder="Ask a question..." value={q} onChange={(event) => setQ(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) { event.preventDefault(); send(); } }}/><Button type="submit" className="send-button" aria-label="Send" title="Send" disabled={!q.trim()}><ArrowUp size={17}/></Button></form>

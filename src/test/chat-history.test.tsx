@@ -63,6 +63,20 @@ describe("Sample conversation history", () => {
     expect(screen.getByLabelText("Conversation messages").textContent).toContain("Rounded LRF: 1.587");
   });
 
+  it("replaces the feedback form with just the thanks line once feedback is submitted", () => {
+    render(<PensionAssistant />);
+    fireEvent.click(screen.getByRole("button", { name: "History" }));
+    fireEvent.click(screen.getByRole("button", { name: "B Khan LRF calculation" }));
+    fireEvent.click(screen.getByRole("button", { name: "Rate answer 5" }));
+    fireEvent.click(screen.getByRole("button", { name: "Submit feedback" }));
+    const transcript = screen.getByLabelText("Conversation messages");
+    expect(transcript.textContent).toContain("Thanks — you rated this 5/5.");
+    expect(screen.queryByLabelText("Rate answer 5")).toBeNull();
+    expect(screen.queryByLabelText("Answer feedback")).toBeNull();
+    expect(screen.queryByRole("button", { name: "Submit feedback" })).toBeNull();
+    expect(transcript.querySelector(".assistant-message:last-of-type .answer-feedback.submitted")).not.toBeNull();
+  });
+
   it("filters history and closes the sidebar without clearing the selected conversation", () => {
     render(<PensionAssistant />);
     fireEvent.click(screen.getByRole("button", { name: "History" }));

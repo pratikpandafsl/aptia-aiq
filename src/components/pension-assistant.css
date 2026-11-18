@@ -68,7 +68,8 @@
 .answer-label { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; font-size: 8px; text-transform: uppercase; color: var(--brand); margin-bottom: 8px; }
 .confidence { color: var(--foreground); background: var(--brand-soft); border-radius: 5px; padding: 0 5px; text-transform: none; }
 .answer-text { white-space: pre-wrap; overflow-wrap: anywhere; }
-.answer-feedback { margin: 0 0 10px; padding: 12px 14px; background: var(--chat-surface); border-top: 1px solid var(--chat-border); border-radius: 0 0 8px 8px; }
+.answer-feedback { margin: 12px -14px -14px; padding: 12px 14px; background: var(--chat-surface); border-top: 1px solid var(--chat-border); border-radius: 0 0 8px 8px; }
+.answer-feedback.submitted { padding: 8px 14px 10px; }
 .answer-feedback p { font-size: 9px; color: var(--chat-muted); }
 .rating-options { display: flex; gap: 5px; margin: 7px 0; }
 .rating-options .chat-button { width: 23px; height: 23px; border: 1px solid var(--chat-border); border-radius: 50%; font-size: 10px; }
