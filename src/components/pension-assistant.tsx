@@ -6,6 +6,7 @@ import { ChatButton as Button } from "./chat-button";
 import { ReasoningView, ValidationView } from "./answer-detail-views";
 import { downloadChatText, formatChatExport, getChatExportFilename, getExportServerTime } from "../lib/chat-export";
 import { BOT_NAME, getBotInitials } from "../lib/chat-config";
+import { generateHistoryTitle, summarizeFirstMessage } from "../lib/chat-title";
 
 const tabs = ["Sources", "How it answered", "Validation"] as const;
 const points = ["Documents and data records cited, with file name, version, pages and effective date", "Owner, last update and freshness so you can trust what you read", "Exact excerpt or record reference, plus anything else worth knowing", "Review whether the sources support the answer: Supports, Does not support or Unclear"];
@@ -47,8 +48,14 @@ export default function PensionAssistant() {
       setRecords((previous) => previous.map((record) => record.id === active.id ? { ...record, messages: [...record.messages, ...messages], confidence: null } : record));
     } else {
       const id = crypto.randomUUID();
-      setRecords((previous) => [{ id, title: text.slice(0, 70), messages, sources: [], reasoning: [], validation: [], confidence: null }, ...previous]);
+      setRecords((previous) => [{ id, title: summarizeFirstMessage(text), messages, sources: [], reasoning: [], validation: [], confidence: null }, ...previous]);
       setActiveId(id);
+      void generateHistoryTitle(text).then((title) => {
+        const resolvedTitle = title.trim() || summarizeFirstMessage(text);
+        setRecords((previous) => previous.map((record) => record.id === id ? { ...record, title: resolvedTitle } : record));
+      }).catch(() => {
+        // Retain the local summary if the future AI service is unavailable.
+      });
     }
     setQ(""); textarea.current?.focus();
   };

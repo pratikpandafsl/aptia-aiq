@@ -30,6 +30,7 @@ use the editor.
 <!-- LOVABLE:END -->
 
 ## Chat prototype
+- Generate new-chat history titles once from the first user message through the async router-independent title function; retain a local summary on failure so future AI integration cannot interrupt messaging.
 - Keep bot branding in the shared chat configuration and derive export filenames from that name and the conversation title so renaming the bot stays consistent.
 - Keep the history UI in a router-independent React component with typed data.js records so the hosted preview and standalone download share behavior.
 - Keep prototype chat changes and feedback in memory; API persistence and inference are not connected at this stage.

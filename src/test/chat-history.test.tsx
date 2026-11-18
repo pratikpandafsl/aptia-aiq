@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within, cleanup } from "@testing-library/react";
+import { act, fireEvent, render, screen, within, cleanup } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import PensionAssistant from "../components/pension-assistant";
 import { dummyResponse } from "../data.js";
@@ -6,10 +6,10 @@ import { dummyResponse } from "../data.js";
 afterEach(cleanup);
 
 describe("Sample conversation history", () => {
-  it("adds a user query and one dummy reply to a new chat and retains them in history", () => {
+  it("adds a user query and one dummy reply to a new chat and retains them in history", async () => {
     render(<PensionAssistant />);
     fireEvent.change(screen.getByLabelText("Ask a question"), { target: { value: "Check my pension date" } });
-    fireEvent.click(screen.getByRole("button", { name: "Send" }));
+    await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Send" })); });
     const transcript = screen.getByLabelText("Conversation messages");
     expect(transcript.querySelectorAll(".user-message")).toHaveLength(1);
     expect(transcript.querySelectorAll(".assistant-message")).toHaveLength(1);
@@ -17,7 +17,7 @@ describe("Sample conversation history", () => {
     expect(screen.getByLabelText("Ask a question")).toHaveValue("");
     fireEvent.click(screen.getByRole("button", { name: "New chat" }));
     fireEvent.click(screen.getByRole("button", { name: "History" }));
-    fireEvent.click(screen.getByRole("button", { name: "Check my pension date" }));
+    fireEvent.click(screen.getByRole("button", { name: "Pension date" }));
     expect(screen.getByLabelText("Conversation messages").textContent).toContain(dummyResponse);
   });
 
