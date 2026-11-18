@@ -79,6 +79,8 @@
 }
 
 :root {
+  --validation-success: oklch(0.64 0.16 155);
+  --validation-warning: oklch(0.76 0.15 70);
   --brand-soft: oklch(0.95 0.035 185);
   --chat-surface: oklch(0.33 0.048 230);
   --chat-border: oklch(0.45 0.04 230);

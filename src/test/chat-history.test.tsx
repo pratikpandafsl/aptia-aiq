@@ -13,9 +13,9 @@ describe("Sample conversation history", () => {
     expect(screen.getByLabelText("Conversation messages").textContent).toContain("Rounded LRF: 1.587");
     expect(screen.getByRole("tabpanel").textContent).toContain("Weir_Group_Trust_Deed_and_Rules.pdf");
     fireEvent.click(screen.getByRole("tab", { name: "How it answered" }));
-    expect(screen.getByRole("tabpanel").textContent).toContain("72 complete months");
+    expect(screen.getByRole("tabpanel").textContent).toContain("months = 72");
     fireEvent.click(screen.getByRole("tab", { name: "Validation" }));
-    expect(screen.getByRole("tabpanel").textContent).toContain("Source coverage");
+    expect(screen.getByRole("tabpanel").textContent).toContain("GMP uplift must be calculated separately");
     fireEvent.click(screen.getByRole("button", { name: "Bereavement documents" }));
     expect(screen.getByLabelText("Conversation messages").textContent).toContain("death certificate");
     expect(screen.getByLabelText("Conversation messages").textContent).not.toContain("QQ000013A");

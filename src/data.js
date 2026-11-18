@@ -15,7 +15,23 @@ export const conversations = [
     ],
     reasoning: ["Matched the member record to the scheme and reference supplied in the question.", "Compared 14 September 2026 with the recorded retirement date of 14 September 2020: 72 complete months.", "Applied the cited non-GMP rule: 1.08 raised to 6 gives 1.586874, rounded to 1.587.", "Separated GMP treatment from the non-GMP calculation. The answer requires human review."],
     validation: [{ label: "Member match", detail: "The supplied scheme and member reference match the sample record." }, { label: "Calculation", detail: "72 complete months = 6 years; 1.08^6 = 1.586874." }, { label: "Source coverage", detail: "The member record supplies the date and the scheme rules supply the factor." }, { label: "Human review", detail: "Confirm live records and scheme rules before acting on this illustrative answer." }],
-    confidence: 93
+    confidence: 93,
+    answerDetails: {
+      timeline: [
+        { label: "Understand", text: "Weir Group · B Khan (QQ000013A) · late retirement 14/09/2026" },
+        { label: "Retrieve", text: "Member record NRD and Rule 6.3 formula" },
+        { label: "Reason", text: "Deterministic calculation", detail: "months = 72; n = 72/12 = 6; 1.08^6 = 1.586874" },
+        { label: "Compose", text: "Bottom line, inputs, calculation, GMP caveat" }
+      ],
+      checks: [
+        { label: "Scheme identified", detail: "Weir Group" },
+        { label: "Member identified", detail: "B Khan · QQ000013A" },
+        { label: "Calculation", detail: "Recomputed by calculator, not the AI model" },
+        { label: "Dates", detail: "Age 71 at 14/09/2026 matches DOB 14/09/1955" },
+        { label: "GMP treatment", detail: "GMP uplift must be calculated separately", warning: true }
+      ],
+      pending: ["Statutory GMP increase from GMP payable date"]
+    }
   },
   ...[
     ["bereavement", "Bereavement documents", "Which documents are needed for a bereavement query?", "The sample checklist includes the death certificate, the member reference and contact details for the person reporting the death. Confirm the current scheme checklist before requesting documents.", "Bereavement_Checklist.pdf"],

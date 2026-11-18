@@ -21,4 +21,9 @@ export interface Conversation {
   reasoning: string[];
   validation: { label: string; detail: string }[];
   confidence: number | null;
+  answerDetails?: {
+    timeline: { label: string; text: string; detail?: string }[];
+    checks: { label: string; detail: string; warning?: boolean }[];
+    pending: string[];
+  };
 }
