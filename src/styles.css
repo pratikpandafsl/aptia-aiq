@@ -8,6 +8,7 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
+@import "./components/pension-assistant.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -78,6 +79,13 @@
 }
 
 :root {
+  --brand-soft: oklch(0.95 0.035 185);
+  --chat-surface: oklch(0.33 0.048 230);
+  --chat-border: oklch(0.45 0.04 230);
+  --chat-muted: oklch(0.69 0.04 230);
+  --user-message: oklch(0.65 0.12 185);
+  --user-message-foreground: oklch(0.22 0.04 230);
+  --shadow-control: 0 1px 3px oklch(0.25 0.04 250 / 15%);
   --radius: 0.625rem;
   --brand: oklch(0.72 0.13 185);
   --brand-strong: oklch(0.52 0.1 190);

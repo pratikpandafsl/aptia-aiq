@@ -28,3 +28,7 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Chat prototype
+- Keep the history UI in a router-independent React component with typed data.js records so the hosted preview and standalone download share behavior.
+- Keep prototype chat changes and feedback in memory; API persistence and inference are not connected at this stage.
