@@ -1,5 +1,6 @@
 // Illustrative, fictional records for the prototype, not pension advice.
 // Replace this array with your API response using the same object shape.
+export const dummyResponse = "This is a sample response to your query.\n\nFor a pension query, check the applicable scheme rules and current member details before taking action. No live records or documents have been checked for this reply.\n\nThis temporary response is for testing only, not pension advice.";
 /** @type {import('./components/chat-types').Conversation[]} */
 export const conversations = [
   {

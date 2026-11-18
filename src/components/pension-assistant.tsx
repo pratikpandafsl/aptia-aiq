@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { History, Plus, SlidersHorizontal, ChevronDown, ArrowUp, BookOpenCheck, X, Search, MessageSquare, Database, FileText, Download, ThumbsUp, ThumbsDown, CircleHelp, ShieldCheck, PanelRight } from "lucide-react";
-import { conversations as sampleConversations } from "../data.js";
+import { conversations as sampleConversations, dummyResponse } from "../data.js";
 import type { Conversation } from "./chat-types";
 import { ChatButton as Button } from "./chat-button";
 import { ReasoningView, ValidationView } from "./answer-detail-views";
@@ -39,11 +39,15 @@ export default function PensionAssistant() {
   const send = () => {
     const text = q.trim();
     if (!text) return;
+    const messages: Conversation["messages"] = [
+      { id: crypto.randomUUID(), role: "user", text },
+      { id: crypto.randomUUID(), role: "assistant", text: dummyResponse },
+    ];
     if (active) {
-      setRecords((previous) => previous.map((record) => record.id === active.id ? { ...record, messages: [...record.messages, { id: crypto.randomUUID(), role: "user", text }] } : record));
+      setRecords((previous) => previous.map((record) => record.id === active.id ? { ...record, messages: [...record.messages, ...messages], confidence: null } : record));
     } else {
       const id = crypto.randomUUID();
-      setRecords((previous) => [{ id, title: text.slice(0, 70), messages: [{ id: crypto.randomUUID(), role: "user", text }], sources: [], reasoning: [], validation: [], confidence: null }, ...previous]);
+      setRecords((previous) => [{ id, title: text.slice(0, 70), messages, sources: [], reasoning: [], validation: [], confidence: null }, ...previous]);
       setActiveId(id);
     }
     setQ(""); textarea.current?.focus();

@@ -1,10 +1,38 @@
 import { fireEvent, render, screen, within, cleanup } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import PensionAssistant from "../components/pension-assistant";
+import { dummyResponse } from "../data.js";
 
 afterEach(cleanup);
 
 describe("Sample conversation history", () => {
+  it("adds a user query and one dummy reply to a new chat and retains them in history", () => {
+    render(<PensionAssistant />);
+    fireEvent.change(screen.getByLabelText("Ask a question"), { target: { value: "Check my pension date" } });
+    fireEvent.click(screen.getByRole("button", { name: "Send", exact: true }));
+    const transcript = screen.getByLabelText("Conversation messages");
+    expect(transcript.querySelectorAll(".user-message")).toHaveLength(1);
+    expect(transcript.querySelectorAll(".assistant-message")).toHaveLength(1);
+    expect(transcript.textContent).toContain(dummyResponse);
+    expect(screen.getByLabelText("Ask a question")).toHaveValue("");
+    fireEvent.click(screen.getByRole("button", { name: "New chat" }));
+    fireEvent.click(screen.getByRole("button", { name: "History", exact: true }));
+    fireEvent.click(screen.getByRole("button", { name: "Check my pension date", exact: true }));
+    expect(screen.getByLabelText("Conversation messages").textContent).toContain(dummyResponse);
+  });
+
+  it("appends one dummy reply to each follow-up without replacing saved messages", () => {
+    render(<PensionAssistant />);
+    fireEvent.click(screen.getByRole("button", { name: "History", exact: true }));
+    fireEvent.click(screen.getByRole("button", { name: "B Khan LRF calculation" }));
+    fireEvent.change(screen.getByLabelText("Ask a question"), { target: { value: "What should I check next?" } });
+    fireEvent.click(screen.getByRole("button", { name: "Send", exact: true }));
+    const transcript = screen.getByLabelText("Conversation messages");
+    expect(transcript.querySelectorAll(".user-message")).toHaveLength(2);
+    expect(transcript.querySelectorAll(".assistant-message")).toHaveLength(2);
+    expect(transcript.textContent).toContain("Rounded LRF: 1.587");
+    expect(transcript.querySelector(".assistant-message:last-of-type")?.textContent).toContain(dummyResponse);
+  });
   it("opens history and restores messages, sources, reasoning and validation for the selected record", () => {
     render(<PensionAssistant />);
     fireEvent.click(screen.getByRole("button", { name: "History" }));
