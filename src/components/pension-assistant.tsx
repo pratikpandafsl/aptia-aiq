@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { History, Plus, ArrowUp, BookOpenCheck, X, Search, MessageSquare, Database, FileText, Download, ThumbsUp, ThumbsDown, CircleHelp, ShieldCheck, PanelRight } from "lucide-react";
+import { History, Plus, ArrowUp, BookOpenCheck, X, Search, MessageSquare, Database, FileText, Download, ThumbsUp, ThumbsDown, ShieldCheck, PanelRight } from "lucide-react";
 import { conversations as sampleConversations, dummyResponse } from "../data.js";
 import type { Conversation } from "./chat-types";
 import { ChatButton as Button } from "./chat-button";
@@ -11,7 +11,7 @@ import { ChatAttachments } from "./chat-attachments";
 import { ChatMode } from "./chat-mode";
 
 const tabs = ["Sources", "How it answered", "Validation"] as const;
-const points = ["Documents and data records cited, with file name, version, pages and effective date", "Owner, last update and freshness so you can trust what you read", "Exact excerpt or record reference, plus anything else worth knowing", "Review whether the sources support the answer: Supports, Does not support or Unclear"];
+const points = ["Documents and data records cited, with file name, version, pages and effective date", "Owner, last update and freshness so you can trust what you read", "Exact excerpt or record reference, plus anything else worth knowing", "Review whether the sources support the answer with a thumbs up or thumbs down"];
 
 export default function PensionAssistant() {
   const [historyOpen, setHistoryOpen] = useState(false);
@@ -127,10 +127,7 @@ export default function PensionAssistant() {
         <div className="answer-panel-content" id="answer-details-content" role="tabpanel" aria-label={tab}>
           {!active || (tab === "Sources" ? !active.sources.length : tab === "How it answered" ? !active.reasoning.length : !active.validation.length) ? <div className="sources-empty"><div className="sources-avatar"><BookOpenCheck size={19}/></div><h2>{tab === "Sources" ? "Sources behind the answer" : tab}</h2><p>Appears here once you ask a question.</p>{tab === "Sources" && <ul>{points.map((point) => <li key={point}><span/>{point}</li>)}</ul>}</div> : tab === "Sources" ? <>
             {active.sources.map((source) => <article className="source-card" key={source.id}><div className="source-heading">{source.kind === "record" ? <Database size={15}/> : <FileText size={15}/>}<h2>{source.title}</h2><span className="source-status">{source.status}</span></div><dl className="source-fields">{source.fields.map((field) => <div key={field.label}><dt>{field.label}</dt><dd>{field.value}</dd></div>)}</dl><blockquote>{source.excerpt}</blockquote></article>)}
-            <div className="source-review"><p>Do these sources support the answer?</p><div>{[["Supports", ThumbsUp], ["Does not support", ThumbsDown], ["Unclear", CircleHelp]].map(([label, Icon]) => {
-              if (typeof label !== "string" || !Icon || typeof Icon === "string") return null;
-              return <Button key={label} className={review?.support === label ? "selected" : ""} aria-pressed={review?.support === label} onClick={() => updateReview({ support: label })}><Icon size={13}/>{label}</Button>;
-            })}</div></div>
+            <div className="source-review"><div role="group" aria-label="Do these sources support the answer?">{([["Supports", ThumbsUp], ["Does not support", ThumbsDown]] as const).map(([label, Icon]) => <Button key={label} className={review?.support === label ? "selected" : ""} aria-label={label} title={label} aria-pressed={review?.support === label} onClick={() => updateReview({ support: label })}><Icon size={14}/></Button>)}</div></div>
           </> : tab === "How it answered" ? <ReasoningView conversation={active}/> : <ValidationView conversation={active}/>}
         </div>
       </section>

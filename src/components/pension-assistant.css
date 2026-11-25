@@ -100,8 +100,8 @@
 .source-fields dd { overflow-wrap: anywhere; }
 .source-card blockquote { font-size: 9px; color: var(--muted-foreground); font-style: italic; padding-left: 10px; border-left: 2px solid var(--brand-soft); margin-left: 22px; }
 .source-review { border-top: 1px solid var(--border); padding-top: 12px; color: var(--muted-foreground); font-size: 9px; }
-.source-review > div { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
-.source-review .chat-button { background: var(--background); border: 1px solid var(--border); padding: 5px 8px; box-shadow: var(--shadow-control); }
+.source-review > div { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0; }
+.source-review .chat-button { background: var(--background); border: 1px solid var(--border); padding: 6px 10px; border-radius: 8px; box-shadow: var(--shadow-control); }
 .source-review .selected { background: var(--brand-soft); color: var(--foreground); }
 .reasoning-timeline { margin: 4px 0 0 3px; padding-left: 17px; border-left: 1px solid var(--border); list-style: none; }
 .reasoning-timeline li { position: relative; margin-bottom: 18px; line-height: 1.4; }

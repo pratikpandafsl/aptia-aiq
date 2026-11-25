@@ -87,4 +87,24 @@ describe("Sample conversation history", () => {
     expect(screen.queryByLabelText("Conversation history")).toBeNull();
     expect(screen.getByLabelText("Conversation messages").textContent).toContain("QQ000013A");
   });
+
+  it("shows only thumbs up and thumbs down buttons as feedback in the sources panel", () => {
+    render(<PensionAssistant />);
+    fireEvent.click(screen.getByRole("button", { name: "History" }));
+    fireEvent.click(screen.getByRole("button", { name: "B Khan LRF calculation" }));
+    const panel = screen.getByRole("tabpanel");
+    const up = screen.getByRole("button", { name: "Supports" });
+    const down = screen.getByRole("button", { name: "Does not support" });
+    expect(up.querySelector("svg")).not.toBeNull();
+    expect(down.querySelector("svg")).not.toBeNull();
+    expect(screen.queryByRole("button", { name: "Unclear" })).toBeNull();
+    expect(panel.textContent).not.toContain("Unclear");
+    expect(panel.textContent).not.toContain("Do these sources support the answer?");
+    fireEvent.click(up);
+    expect(screen.getByRole("button", { name: "Supports" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "Does not support" })).toHaveAttribute("aria-pressed", "false");
+    fireEvent.click(down);
+    expect(screen.getByRole("button", { name: "Supports" })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("button", { name: "Does not support" })).toHaveAttribute("aria-pressed", "true");
+  });
 });
