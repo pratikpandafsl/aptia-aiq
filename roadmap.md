@@ -5,3 +5,5 @@
 - [x] Match the right-hand timeline and validation views to the new screenshots and refresh the download.
 - [x] Match the chat text export, verify the actual download, and refresh the standalone source archive.
 - [x] Hide the toolbar under the chat input and refresh the standalone download.- [x] Make the sources-panel feedback a thumbs up / thumbs down pair with no labels and no Unclear button.
+- [x] Show a comment box and Submit when thumbs down is chosen, with a placeholder save call.
+- [x] Remove the blue focus border from the question box on new chats and refresh the standalone download.
