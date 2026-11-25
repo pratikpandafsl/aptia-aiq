@@ -1,3 +1,4 @@
+import { submitSourceFeedback } from "@/lib/source-feedback";
 import { useEffect, useRef, useState } from "react";
 import { History, Plus, ArrowUp, BookOpenCheck, X, Search, MessageSquare, Database, FileText, Download, ThumbsUp, ThumbsDown, ShieldCheck, PanelRight } from "lucide-react";
 import { conversations as sampleConversations, dummyResponse } from "../data.js";
@@ -25,7 +26,7 @@ export default function PensionAssistant() {
   const [exportState, setExportState] = useState<{ id: string; text: string } | null>(null);
   const [exportBusy, setExportBusy] = useState(false);
   const [exportError, setExportError] = useState("");
-  const [feedback, setFeedback] = useState<Record<string, { rating: number; note: string; submitted: boolean; support: string }>>({});
+  const [feedback, setFeedback] = useState<Record<string, { rating: number; note: string; submitted: boolean; support: string; sourceNote?: string; sourceSubmitted?: boolean }>>({});
   const textarea = useRef<HTMLTextAreaElement>(null);
   const transcript = useRef<HTMLDivElement>(null);
   const active = records.find((record) => record.id === activeId);
@@ -127,7 +128,12 @@ export default function PensionAssistant() {
         <div className="answer-panel-content" id="answer-details-content" role="tabpanel" aria-label={tab}>
           {!active || (tab === "Sources" ? !active.sources.length : tab === "How it answered" ? !active.reasoning.length : !active.validation.length) ? <div className="sources-empty"><div className="sources-avatar"><BookOpenCheck size={19}/></div><h2>{tab === "Sources" ? "Sources behind the answer" : tab}</h2><p>Appears here once you ask a question.</p>{tab === "Sources" && <ul>{points.map((point) => <li key={point}><span/>{point}</li>)}</ul>}</div> : tab === "Sources" ? <>
             {active.sources.map((source) => <article className="source-card" key={source.id}><div className="source-heading">{source.kind === "record" ? <Database size={15}/> : <FileText size={15}/>}<h2>{source.title}</h2><span className="source-status">{source.status}</span></div><dl className="source-fields">{source.fields.map((field) => <div key={field.label}><dt>{field.label}</dt><dd>{field.value}</dd></div>)}</dl><blockquote>{source.excerpt}</blockquote></article>)}
-            <div className="source-review"><div role="group" aria-label="Do these sources support the answer?">{([["Supports", ThumbsUp], ["Does not support", ThumbsDown]] as const).map(([label, Icon]) => <Button key={label} className={review?.support === label ? "selected" : ""} aria-label={label} title={label} aria-pressed={review?.support === label} onClick={() => updateReview({ support: label })}><Icon size={14}/></Button>)}</div></div>
+            <div className="source-review"><div role="group" aria-label="Do these sources support the answer?">{([["Supports", ThumbsUp], ["Does not support", ThumbsDown]] as const).map(([label, Icon]) => <Button key={label} className={review?.support === label ? "selected" : ""} aria-label={label} title={label} aria-pressed={review?.support === label} onClick={() => updateReview({ support: label, sourceSubmitted: false })}><Icon size={14}/></Button>)}</div>
+              {review?.support === "Does not support" && (review.sourceSubmitted ? <p role="status" className="source-thanks">Thanks — your feedback was sent.</p> : <form className="source-feedback-form" onSubmit={(event) => { event.preventDefault(); const comment = (review.sourceNote ?? "").trim(); if (!comment || !activeId) return; void submitSourceFeedback({ conversationId: activeId, support: "Does not support", comment }).then(() => updateReview({ sourceSubmitted: true })); }}>
+                <textarea aria-label="Source feedback" placeholder="What's wrong with these sources?" value={review.sourceNote ?? ""} onChange={(event) => updateReview({ sourceNote: event.target.value })}/>
+                <Button type="submit" disabled={!(review.sourceNote ?? "").trim()}>Submit</Button>
+              </form>)}
+            </div>
           </> : tab === "How it answered" ? <ReasoningView conversation={active}/> : <ValidationView conversation={active}/>}
         </div>
       </section>
