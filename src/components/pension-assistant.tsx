@@ -1,5 +1,5 @@
 import { submitSourceFeedback } from "@/lib/source-feedback";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { History, Plus, ArrowUp, BookOpenCheck, X, Search, MessageSquare, Database, FileText, Download, ThumbsUp, ThumbsDown, ShieldCheck, PanelRight } from "lucide-react";
 import { conversations as sampleConversations, dummyResponse } from "../data.js";
 import type { Conversation } from "./chat-types";
@@ -14,7 +14,7 @@ import { ChatMode } from "./chat-mode";
 const tabs = ["Sources", "How it answered", "Validation"] as const;
 const points = ["Documents and data records cited, with file name, version, pages and effective date", "Owner, last update and freshness so you can trust what you read", "Exact excerpt or record reference, plus anything else worth knowing", "Review whether the sources support the answer with a thumbs up or thumbs down"];
 
-export default function PensionAssistant() {
+export default function PensionAssistant({ homeLink }: { homeLink?: ReactNode } = {}) {
   const [historyOpen, setHistoryOpen] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [records, setRecords] = useState<Conversation[]>(sampleConversations);
@@ -86,7 +86,7 @@ export default function PensionAssistant() {
   return <div className="assistant-app">
     <header className="assistant-header">
       <div className="brand-lockup"><div className="brand-avatar">{getBotInitials()}</div><div><strong>{BOT_NAME}</strong><small>APTIA COLLEAGUE ASSIST</small></div></div>
-      <nav>{["Prompting guide", `What can I ask ${getBotInitials()}?`, "FAQs", "Contact us"].map((label) => <a key={label} href="#">{label}</a>)}</nav>
+      {homeLink}<nav>{["Prompting guide", `What can I ask ${getBotInitials()}?`, "FAQs", "Contact us"].map((label) => <a key={label} href="#">{label}</a>)}</nav>
       <Button className="details-toggle" aria-label="Toggle answer details" title="Answer details" onClick={() => setDetailsOpen(!detailsOpen)}><PanelRight size={18}/></Button>
     </header>
     <div className="assistant-body">

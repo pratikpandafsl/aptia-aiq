@@ -9,6 +9,7 @@
 @source "../src";
 @import "tw-animate-css";
 @import "./components/pension-assistant.css";
+@import "./components/colleague-portal.css";
 
 @custom-variant dark (&:is(.dark *));
 
