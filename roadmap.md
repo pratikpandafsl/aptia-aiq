@@ -7,3 +7,4 @@
 - [x] Hide the toolbar under the chat input and refresh the standalone download.- [x] Make the sources-panel feedback a thumbs up / thumbs down pair with no labels and no Unclear button.
 - [x] Show a comment box and Submit when thumbs down is chosen, with a placeholder save call.
 - [x] Remove the blue focus border from the question box on new chats and refresh the standalone download.
+- [x] Add microphone dictation inside the chat box and verify transcript, stop, and permission handling with simulated browser speech events; physical microphone testing requires the user's browser.

@@ -30,6 +30,7 @@ use the editor.
 <!-- LOVABLE:END -->
 
 ## Chat prototype
+- Keep dictation in a browser-only, router-independent hook using native SpeechRecognition; stop and detach callbacks on send, draft edits, chat changes, and unmount so late transcripts cannot alter another draft.
 - Keep the response-mode label and its two icons in one portable menu trigger; mode selection is presentation-only until inference is connected.
 - Use a native modal dialog for the portable connectors empty state so focus trapping and Escape dismissal work without router or UI-library dependencies.
 - Keep selected chat attachments as browser File objects in prototype state; the attachment menu does not upload or read documents until an API is connected.

@@ -36,6 +36,10 @@
 .assistant-app .chat-composer textarea:focus-visible { outline: none; }
 .chat-composer textarea::placeholder { color: var(--chat-muted); }
 .send-button { width: 32px; height: 32px; background: var(--brand-strong); color: var(--chat-foreground); border-radius: 10px; }
+.mic-button { width: 32px; height: 32px; color: var(--chat-muted); }
+.mic-button:hover { background: var(--chat-surface); color: var(--chat-foreground); }
+.mic-button.listening { background: var(--brand-soft); color: var(--brand); }
+.speech-status { color: var(--chat-muted); font-size: 11px; line-height: 1.5; margin: 8px 14px 0; }
 .composer-tools { display: flex; gap: 19px; align-items: center; margin: 15px 8px 0; font-size: 11px; color: var(--chat-muted); }
 .composer-tools span { color: var(--chat-foreground); }
 .composer-tools { position: relative; flex-wrap: wrap; display: none; }

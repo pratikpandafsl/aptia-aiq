@@ -1,6 +1,7 @@
 import { submitSourceFeedback } from "@/lib/source-feedback";
 import { useEffect, useRef, useState } from "react";
-import { History, Plus, ArrowUp, BookOpenCheck, X, Search, MessageSquare, Database, FileText, Download, ThumbsUp, ThumbsDown, ShieldCheck, PanelRight } from "lucide-react";
+import { History, Plus, ArrowUp, BookOpenCheck, X, Search, MessageSquare, Database, FileText, Download, ThumbsUp, ThumbsDown, ShieldCheck, PanelRight, Mic, Square } from "lucide-react";
+import { useChatSpeech } from "../hooks/use-chat-speech";
 import { conversations as sampleConversations, dummyResponse } from "../data.js";
 import type { Conversation } from "./chat-types";
 import { ChatButton as Button } from "./chat-button";
@@ -21,6 +22,7 @@ export default function PensionAssistant() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [q, setQ] = useState("");
+  const speech = useChatSpeech(q, setQ);
   const [files, setFiles] = useState<File[]>([]);
   const [tab, setTab] = useState<(typeof tabs)[number]>("Sources");
   const [exportState, setExportState] = useState<{ id: string; text: string } | null>(null);
@@ -36,8 +38,8 @@ export default function PensionAssistant() {
   useEffect(() => { textarea.current?.focus(); }, [activeId]);
   useEffect(() => { setExportState(null); setExportError(""); }, [activeId, active?.messages.length]);
   useEffect(() => { if (transcript.current) transcript.current.scrollTop = transcript.current.scrollHeight; }, [activeId, active?.messages.length]);
-  const reset = () => { setActiveId(null); setQ(""); setFiles([]); setTab("Sources"); setDetailsOpen(false); textarea.current?.focus(); };
-  const select = (id: string) => { setActiveId(id); setQ(""); setFiles([]); setTab("Sources"); setDetailsOpen(false); if (window.innerWidth < 768) setHistoryOpen(false); };
+  const reset = () => { speech.stop(); speech.clearError(); setActiveId(null); setQ(""); setFiles([]); setTab("Sources"); setDetailsOpen(false); textarea.current?.focus(); };
+  const select = (id: string) => { speech.stop(); speech.clearError(); setActiveId(id); setQ(""); setFiles([]); setTab("Sources"); setDetailsOpen(false); if (window.innerWidth < 768) setHistoryOpen(false); };
   const updateReview = (change: Partial<NonNullable<typeof review>>) => {
     if (!activeId) return;
     setFeedback((previous) => ({ ...previous, [activeId]: { ...(previous[activeId] ?? { rating: 0, note: "", submitted: false, support: "" }), ...change } }));
@@ -45,6 +47,7 @@ export default function PensionAssistant() {
   const send = () => {
     const text = q.trim();
     if (!text) return;
+    speech.stop(); speech.clearError();
     const messages: Conversation["messages"] = [
       { id: crypto.randomUUID(), role: "user", text },
       { id: crypto.randomUUID(), role: "assistant", text: dummyResponse },
@@ -120,7 +123,8 @@ export default function PensionAssistant() {
             </article>)}
           </div>
         </>}
-        <div className="composer-area"><form className="chat-composer" onSubmit={(event) => { event.preventDefault(); send(); }}><textarea ref={textarea} aria-label="Ask a question" placeholder="Ask a question..." value={q} onChange={(event) => setQ(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) { event.preventDefault(); send(); } }}/><Button type="submit" className="send-button" aria-label="Send" title="Send" disabled={!q.trim()}><ArrowUp size={17}/></Button></form>
+         <div className="composer-area"><form className="chat-composer" onSubmit={(event) => { event.preventDefault(); send(); }}><textarea ref={textarea} aria-label="Ask a question" placeholder={speech.listening ? "Listening…" : "Ask a question..."} value={q} onChange={(event) => { speech.stop(); setQ(event.target.value); }} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) { event.preventDefault(); send(); } }}/><Button className={`mic-button ${speech.listening ? "listening" : ""}`} aria-label={speech.listening ? "Stop voice input" : "Start voice input"} aria-pressed={speech.listening} title={speech.listening ? "Stop voice input" : "Voice input — your browser processes speech"} onClick={speech.toggle}>{speech.listening ? <Square size={14}/> : <Mic size={17}/>}</Button><Button type="submit" className="send-button" aria-label="Send" title="Send" disabled={!q.trim()}><ArrowUp size={17}/></Button></form>
+         {speech.listening && <p className="speech-status" role="status">Listening…</p>}{speech.error && <p className="speech-status" role="alert">{speech.error}</p>}
         <div className="composer-tools"><ChatAttachments files={files} onFilesChange={setFiles}/><ChatMode/></div></div>
       </main>
       <section className={`answer-panel ${detailsOpen ? "details-open" : ""}`} aria-label="Answer details">
