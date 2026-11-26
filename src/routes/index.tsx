@@ -1,19 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ColleagueHome } from "../components/colleague-portal";
-import { DemoGate } from "../components/demo-access";
-import { BOT_NAME } from "../lib/chat-config";
+import PensionAssistant from "../components/pension-assistant";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: `${BOT_NAME} — Colleague Workspace` },
-      { name: "description", content: "Your Aptia colleague workspace with pension updates, scheme knowledge and the AIQ assistant." },
-      { property: "og:title", content: `${BOT_NAME} — Colleague Workspace` },
-      { property: "og:description", content: "Your Aptia colleague workspace with pension updates, scheme knowledge and the AIQ assistant." },
+      { title: "Aptia's IQ — Pension Colleague Assistant" },
+      { name: "description", content: "AIQ helps pension colleagues answer scheme and member queries with cited sources." },
+      { property: "og:title", content: "Aptia's IQ — Pension Colleague Assistant" },
+      { property: "og:description", content: "AIQ helps pension colleagues answer scheme and member queries with cited sources." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: () => <DemoGate><ColleagueHome/></DemoGate>,
+  component: PensionAssistant,
 });
 

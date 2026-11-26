@@ -39,8 +39,3 @@ use the editor.
 - Keep prototype chat changes and feedback in memory; API persistence and inference are not connected at this stage.
 - Store optional timeline and validation presentation records alongside each conversation so right-hand views remain data-driven; second-opinion validation stays disabled until an API is connected.
 - Chat exports use the hosting server's uncached HTTP Date header, formatted in Asia/Kolkata to match the reference; fail visibly rather than substituting a browser timestamp, and keep formatting router-independent.
-
-## Colleague portal
-- Keep demo sign-in as in-memory presentation state, never a security boundary or credential collector; real identity integration is deferred.
-- Keep login at /login, colleague home at /, and the chat at /aiq; reuse the router-independent chat with an optional home-link slot to preserve standalone compatibility.
-- Use Embla for the home carousel, with manual navigation and swipe support; avoid automatic motion that interrupts reading.
