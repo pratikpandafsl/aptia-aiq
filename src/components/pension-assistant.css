@@ -38,8 +38,8 @@
 .send-button { width: 32px; height: 32px; background: var(--brand-strong); color: var(--chat-foreground); border-radius: 10px; }
 .mic-button { width: 32px; height: 32px; color: var(--chat-muted); }
 .mic-button:hover { background: var(--chat-surface); color: var(--chat-foreground); }
-.mic-button.listening { background: var(--destructive); color: var(--destructive-foreground); animation: mic-recording 1.6s ease-out infinite; }
-@keyframes mic-recording { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--destructive) 55%, transparent); } 70%, 100% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--destructive) 0%, transparent); } }
+.mic-button.listening { background: var(--mic-recording); color: var(--mic-recording-foreground); animation: mic-recording 1.6s ease-out infinite; }
+@keyframes mic-recording { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--mic-recording) 70%, transparent); } 70%, 100% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--mic-recording) 0%, transparent); } }
 .speech-status { color: var(--chat-muted); font-size: 11px; line-height: 1.5; margin: 8px 14px 0; }
 .composer-tools { display: flex; gap: 19px; align-items: center; margin: 15px 8px 0; font-size: 11px; color: var(--chat-muted); }
 .composer-tools span { color: var(--chat-foreground); }

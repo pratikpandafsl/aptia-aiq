@@ -79,6 +79,8 @@
 }
 
 :root {
+  --mic-recording: oklch(0.91 0.05 25);
+  --mic-recording-foreground: oklch(0.48 0.17 25);
   --validation-success: oklch(0.64 0.16 155);
   --validation-warning: oklch(0.76 0.15 70);
   --brand-soft: oklch(0.95 0.035 185);
@@ -129,6 +131,8 @@
 }
 
 .dark {
+  --mic-recording: oklch(0.62 0.15 25);
+  --mic-recording-foreground: oklch(0.98 0.01 25);
   --background: oklch(0.129 0.042 264.695);
   --foreground: oklch(0.984 0.003 247.858);
   --card: oklch(0.208 0.042 265.755);
