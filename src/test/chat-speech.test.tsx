@@ -72,6 +72,18 @@ describe("Chat dictation", () => {
     expect(screen.getByRole("button", { name: "Send" })).toBeEnabled();
   });
 
+  it("marks the mic as recording without adding a status line under the box", () => {
+    render(<PensionAssistant/>);
+    const composer = document.querySelector(".composer-area") as HTMLElement;
+    const heightBefore = composer.getBoundingClientRect().height;
+    fireEvent.click(screen.getByRole("button", { name: "Start voice input" }));
+    const mic = screen.getByRole("button", { name: "Stop voice input" });
+    expect(mic).toHaveAttribute("aria-pressed", "true");
+    expect(mic.className).toContain("listening");
+    expect(screen.queryByText("Listening…", { selector: "p" })).not.toBeInTheDocument();
+    expect(composer.getBoundingClientRect().height).toBe(heightBefore);
+  });
+
   it("reports unavailable speech recognition without affecting typing", () => {
     vi.stubGlobal("SpeechRecognition", undefined);
     render(<PensionAssistant/>);

@@ -124,7 +124,7 @@ export default function PensionAssistant() {
           </div>
         </>}
          <div className="composer-area"><form className="chat-composer" onSubmit={(event) => { event.preventDefault(); send(); }}><textarea ref={textarea} aria-label="Ask a question" placeholder={speech.listening ? "Listening…" : "Ask a question..."} value={q} onChange={(event) => { speech.stop(); setQ(event.target.value); }} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) { event.preventDefault(); send(); } }}/><Button className={`mic-button ${speech.listening ? "listening" : ""}`} aria-label={speech.listening ? "Stop voice input" : "Start voice input"} aria-pressed={speech.listening} title={speech.listening ? "Stop voice input" : "Voice input — your browser processes speech"} onClick={speech.toggle}>{speech.listening ? <Square size={14}/> : <Mic size={17}/>}</Button><Button type="submit" className="send-button" aria-label="Send" title="Send" disabled={!q.trim()}><ArrowUp size={17}/></Button></form>
-         {speech.listening && <p className="speech-status" role="status">Listening…</p>}{speech.error && <p className="speech-status" role="alert">{speech.error}</p>}
+         {speech.error && <p className="speech-status" role="alert">{speech.error}</p>}
         <div className="composer-tools"><ChatAttachments files={files} onFilesChange={setFiles}/><ChatMode/></div></div>
       </main>
       <section className={`answer-panel ${detailsOpen ? "details-open" : ""}`} aria-label="Answer details">
