@@ -7,7 +7,9 @@ import type { Conversation } from "./chat-types";
 import { ChatButton as Button } from "./chat-button";
 import { ReasoningView, ValidationView } from "./answer-detail-views";
 import { downloadChatText, formatChatExport, getChatExportFilename, getExportServerTime } from "../lib/chat-export";
-import { BOT_NAME, getBotInitials } from "../lib/chat-config";
+import { getBotInitials } from "../lib/chat-config";
+import { ChatHeader } from "./chat-header";
+import { PromptingGuide } from "./prompting-guide";
 import { generateHistoryTitle, summarizeFirstMessage } from "../lib/chat-title";
 import { ChatAttachments } from "./chat-attachments";
 import { ChatMode } from "./chat-mode";
@@ -15,7 +17,8 @@ import { ChatMode } from "./chat-mode";
 const tabs = ["Sources", "How it answered", "Validation"] as const;
 const points = ["Documents and data records cited, with file name, version, pages and effective date", "Owner, last update and freshness so you can trust what you read", "Exact excerpt or record reference, plus anything else worth knowing", "Review whether the sources support the answer with a thumbs up or thumbs down"];
 
-export default function PensionAssistant() {
+export default function PensionAssistant({ onPromptingGuide }: { onPromptingGuide?: () => void } = {}) {
+  const [guideOpen, setGuideOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [records, setRecords] = useState<Conversation[]>(sampleConversations);
@@ -86,12 +89,12 @@ export default function PensionAssistant() {
     } finally { setExportBusy(false); }
   };
 
+  if (guideOpen) return <PromptingGuide onBack={() => setGuideOpen(false)}/>;
+
   return <div className="assistant-app">
-    <header className="assistant-header">
-      <div className="brand-lockup"><div className="brand-avatar">{getBotInitials()}</div><div><strong>{BOT_NAME}</strong><small>APTIA COLLEAGUE ASSIST</small></div></div>
-      <nav>{["Prompting guide", `What can I ask ${getBotInitials()}?`, "FAQs", "Contact us"].map((label) => <a key={label} href="#">{label}</a>)}</nav>
+    <ChatHeader onPromptingGuide={() => { speech.stop(); if (onPromptingGuide) onPromptingGuide(); else setGuideOpen(true); }}>
       <Button className="details-toggle" aria-label="Toggle answer details" title="Answer details" onClick={() => setDetailsOpen(!detailsOpen)}><PanelRight size={18}/></Button>
-    </header>
+    </ChatHeader>
     <div className="assistant-body">
       <aside className="icon-rail">
         <Button className={historyOpen ? "rail-button selected" : "rail-button"} aria-label="History" title="History" aria-expanded={historyOpen} aria-controls="conversation-history" onClick={() => setHistoryOpen(!historyOpen)}><History size={16}/></Button>

@@ -139,3 +139,35 @@
 .source-feedback-form .chat-button { align-self: flex-end; }
 .source-feedback-form .chat-button:disabled { opacity: .5; cursor: not-allowed; }
 .source-thanks { margin-top: 8px; font-size: 11px; }
+.assistant-header nav { align-items: center; }
+.guide-nav { padding: 8px 11px; font-size: inherit; font-weight: inherit; color: inherit; }
+.guide-nav.selected, .guide-nav:hover { background: var(--brand-soft); }
+.prompting-guide-page { overflow-y: auto; }
+.prompting-guide-page .assistant-header { height: 39px; padding: 0 13px; }
+.prompting-guide-page .brand-avatar { width: 24px; height: 24px; font-size: 10px; }
+.prompting-guide-page .brand-lockup { gap: 7px; }
+.prompting-guide-page .brand-lockup strong { font-size: 9px; }
+.prompting-guide-page .brand-lockup small { font-size: 7px; }
+.prompting-guide-page .assistant-header nav { font-size: 8px; gap: 14px; }
+.prompting-guide-page .guide-nav { padding: 6px 8px; }
+.prompting-guide-content { width: min(480px, 100%); margin: 0 auto; padding: 36px 0 30px; font-size: 9px; line-height: 2; }
+.guide-back { color: var(--muted-foreground); font-size: 8px; gap: 6px; margin-bottom: 26px; }
+.guide-back:hover { color: var(--brand-strong); }
+.prompting-guide-content h1 { font-size: 18px; font-weight: 600; line-height: 1.4; }
+.guide-intro { margin-top: 9px; color: var(--muted-foreground); }
+.prompting-guide-content section { margin-top: 23px; }
+.prompting-guide-content h2 { font-size: 10px; font-weight: 600; margin-bottom: 10px; }
+.prompting-guide-content ol { list-style: decimal; padding-left: 14px; color: var(--muted-foreground); }
+.prompting-guide-content li + li { margin-top: 10px; }
+.prompting-guide-content strong { color: var(--foreground); font-weight: 500; }
+.prompting-guide-content blockquote { background: var(--muted); border-left: 1px solid var(--border); padding: 11px 14px; margin-top: 8px; }
+.prompting-guide-content blockquote:first-of-type { border-left-color: var(--brand); }
+.prompting-guide-content section > p { color: var(--muted-foreground); }
+@media (max-width: 767px) {
+  .prompting-guide-page .assistant-header { height: auto; min-height: 52px; flex-wrap: wrap; padding: 10px 16px; gap: 12px; }
+  .prompting-guide-page .assistant-header nav { display: flex; flex-wrap: wrap; gap: 12px; }
+  .prompting-guide-content { padding: 30px 24px 36px; }
+  .prompting-guide-content { font-size: 12px; }
+  .prompting-guide-content h2 { font-size: 12px; }
+  .prompting-guide-page .assistant-header nav { font-size: 10px; }
+}

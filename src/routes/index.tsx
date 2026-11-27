@@ -12,6 +12,11 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: PensionAssistant,
+  component: AssistantPage,
 });
+
+function AssistantPage() {
+  const navigate = Route.useNavigate();
+  return <PensionAssistant onPromptingGuide={() => void navigate({ to: "/prompting-guide" })}/>;
+}
 
